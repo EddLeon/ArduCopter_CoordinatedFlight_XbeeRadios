@@ -204,7 +204,7 @@ void Copter::init_ardupilot()
 
 //USERHOOK_INIT
 #ifdef USERHOOK_INIT
-    userhook_init(); 
+    userhook_init();  // YO LO AGREGUE
 #endif
 
 #if CLI_ENABLED == ENABLED

@@ -113,10 +113,7 @@
 #include "Parameters.h"
 
 // XBee library
-#include <XBee.h>		
-//Drone object
-#include <Drone.h>  
-
+#include <XBee.h>
 
 class Copter {
     public:
@@ -616,11 +613,6 @@ private:
     void userhook_MediumLoop();
     void userhook_SlowLoop();
     void userhook_SuperSlowLoop();
-	void userhook_netDiscoveryResponse();
-	void userhook_ReportStatus();
-	void xbee_run();				
-	bool xbee_init(bool ignore_checks);
-	void simpleModeXbee(); 
     void update_home_from_EKF();
     void set_home_to_current_location_inflight();
     bool set_home_to_current_location();

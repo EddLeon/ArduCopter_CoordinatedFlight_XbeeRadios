@@ -150,9 +150,6 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] PROGMEM = {
 #ifdef USERHOOK_SUPERSLOWLOOP
     { SCHED_TASK(userhook_SuperSlowLoop),400,   75 },
 #endif
-#ifdef USERHOOK_REPORTSTATUS
-    { SCHED_TASK(userhook_ReportStatus),100,   550 } 
-#endif
 };
 
 
@@ -174,6 +171,10 @@ void Copter::setup()
     // setup initial performance counters
     perf_info_reset();
     fast_loopTimer = hal.scheduler->micros();
+	
+	//hal.uartE->begin(9600,128,128);// YO LO AGREGUE
+	//hal.uartE->set_flow_control(AP_HAL::UARTDriver::FLOW_CONTROL_DISABLE);
+	
 }
 
 /*
@@ -240,6 +241,9 @@ void Copter::loop()
     // call until scheduler.tick() is called again
     uint32_t time_available = (timer + MAIN_LOOP_MICROS) - micros();
     scheduler.run(time_available);
+	
+	//hal.uartE->println("hello"); // YO LO AGREGUE
+	
 }
 
 

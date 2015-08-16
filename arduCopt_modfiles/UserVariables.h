@@ -16,7 +16,7 @@ int                 WiiDisplacementY=0;
 
 
 
-  // XBEE
+  // XBEE SHIT
 	XBee xbee = XBee();
 	XBeeResponse response = XBeeResponse();
 
@@ -27,10 +27,7 @@ int                 WiiDisplacementY=0;
 	Rx64Response rx64 = Rx64Response();
 	//Tx64Request tx64 = Tx64Request(addr64, payload, sizeof(payload));
 	
-	//Drone Auxiliary vars
-	
-	//Drone thisDrone = Drone();  // puede que no jale esto...
-	
+
 #endif  // USERHOOK_VARIABLES
 
 

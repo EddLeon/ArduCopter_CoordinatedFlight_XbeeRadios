@@ -716,7 +716,7 @@ bool Copter::arm_checks(bool display_failure, bool arming_from_gcs)
 #if FRAME_CONFIG == HELI_FRAME
                 gcs_send_text_P(SEVERITY_HIGH,PSTR("Arm: Collective below Failsafe"));
 #else
-                gcs_send_text_P(SEVERITY_HIGH,PSTR("Arm: Throttle below Failsafe"));
+                gcs_send_text_P(SEVERITY_HIGH,PSTR("Arm: Throttle below Failsafe")); // TODO, FIX SOMETHING SO IT CAN FLY WITH XBEE
 #endif
             }
             return false;

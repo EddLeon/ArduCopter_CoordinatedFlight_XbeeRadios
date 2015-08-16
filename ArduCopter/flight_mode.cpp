@@ -94,7 +94,11 @@ bool Copter::set_mode(uint8_t mode)
         case BRAKE:
             success = brake_init(ignore_checks);
             break;
-
+		
+		case XBEE:
+            success = xbee_init(ignore_checks);
+            break;
+		
         default:
             success = false;
             break;
@@ -206,6 +210,10 @@ void Copter::update_flight_mode()
         case BRAKE:
             brake_run();
             break;
+		
+		case XBEE:
+            xbee_run();
+            break;
     }
 }
 
@@ -283,7 +291,7 @@ bool Copter::mode_has_manual_throttle(uint8_t mode) {
 // mode_allows_arming - returns true if vehicle can be armed in the specified mode
 //  arming_from_gcs should be set to true if the arming request comes from the ground station
 bool Copter::mode_allows_arming(uint8_t mode, bool arming_from_gcs) {
-    if (mode_has_manual_throttle(mode) || mode == LOITER || mode == ALT_HOLD || mode == POSHOLD || (arming_from_gcs && mode == GUIDED)) {
+    if (mode_has_manual_throttle(mode) || mode == LOITER || mode == ALT_HOLD || mode == POSHOLD || (arming_from_gcs && mode == GUIDED)|| (arming_from_gcs && mode == XBEE)) { 
         return true;
     }
     return false;
@@ -361,6 +369,9 @@ void Copter::print_flight_mode(AP_HAL::BetterStream *port, uint8_t mode)
     case BRAKE:
         port->print_P(PSTR("BRAKE"));
         break;
+	case XBEE: 
+        port->print_P(PSTR("XBEE"));
+        break;	
     default:
         port->printf_P(PSTR("Mode(%u)"), (unsigned)mode);
         break;
