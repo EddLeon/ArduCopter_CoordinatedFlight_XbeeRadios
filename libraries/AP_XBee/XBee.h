@@ -1,7 +1,8 @@
 /**
  * Copyright (c) 2009 Andrew Rapp. All rights reserved.
- *
- * This file is part of XBee-Arduino.
+ * This file is a modified version of XBee-Arduino made to work with
+ * the ArduPilot project
+ * 			Modified in 2015 by Eduardo De Leon	 
  *
  * XBee-Arduino is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,17 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with XBee-Arduino.  If not, see <http://www.gnu.org/licenses/>.
  */
+ 
+ 
+#include <stdint.h>
+#include <AP_HAL.h>
+#include <AP_HAL_PX4.h>
+
 
 #ifndef XBee_h
 #define XBee_h
-
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
-#else
-	#include "WProgram.h"
-#endif
-
-#include <inttypes.h>
 
 #define SERIES_1
 #define SERIES_2
@@ -703,7 +702,7 @@ public:
 	/**
 	 * Starts the serial connection on the specified serial port
 	 */
-	void begin(Stream &serial);
+	void begin(AP_HAL::UARTDriver *serial);
 	void getResponse(XBeeResponse &response);
 	/**
 	 * Returns a reference to the current response
@@ -722,7 +721,7 @@ public:
 	/**
 	 * Specify the serial port.  Only relevant for Arduinos that support multiple serial ports (e.g. Mega)
 	 */
-	void setSerial(Stream &serial);
+	void setSerial(AP_HAL::UARTDriver *serial);
 private:
 	bool available();
 	uint8_t read();
@@ -740,7 +739,7 @@ private:
 	uint8_t _nextFrameId;
 	// buffer for incoming RX packets.  holds only the api specific frame data, starting after the api id byte and prior to checksum
 	uint8_t _responseFrameData[MAX_FRAME_DATA_SIZE];
-	Stream* _serial;
+	AP_HAL::UARTDriver* _serial;
 };
 
 /**

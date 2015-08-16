@@ -1,7 +1,8 @@
 /**
  * Copyright (c) 2009 Andrew Rapp. All rights reserved.
- *
- * This file is part of XBee-Arduino.
+ * This file is a modified version of XBee-Arduino made to work with
+ * the ArduPilot project
+ * 				Modified in 2015 by Eduardo De Leon	 
  *
  * XBee-Arduino is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,14 +19,7 @@
  */
 
 #include "XBee.h"
-
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
-#else
-	#include "WProgram.h"
-#endif
-
-#include "HardwareSerial.h"
+extern const AP_HAL::HAL& hal;  
 
 XBeeResponse::XBeeResponse() {
 
@@ -762,12 +756,8 @@ XBee::XBee(): _response(XBeeResponse()) {
 
         _response.init();
         _response.setFrameData(_responseFrameData);
-		// Contributed by Paul Stoffregen for Teensy support
-#if defined(__AVR_ATmega32U4__) || defined(__MK20DX128__)
-        _serial = &Serial1;
-#else
-        _serial = &Serial;
-#endif
+		
+        _serial = NULL; 
 }
 
 uint8_t XBee::getNextFrameId() {
@@ -783,12 +773,13 @@ uint8_t XBee::getNextFrameId() {
 }
 
 // Support for SoftwareSerial. Contributed by Paul Stoffregen
-void XBee::begin(Stream &serial) {
-	_serial = &serial;
+//void XBee::begin(Stream &serial)
+void XBee::begin(AP_HAL::UARTDriver *serial) { 
+	_serial = serial;
 }
-
-void XBee::setSerial(Stream &serial) {
-	_serial = &serial;
+//void XBee::setSerial(Stream &serial)
+void XBee::setSerial(AP_HAL::UARTDriver *serial) {
+	_serial = serial;
 }
 
 bool XBee::available() {
@@ -835,9 +826,9 @@ bool XBee::readPacket(int timeout) {
 		return false;
 	}
 
-	unsigned long start = millis();
+	unsigned long start = hal.scheduler->millis(); 
 
-    while (int((millis() - start)) < timeout) {
+    while (int((hal.scheduler->millis() - start)) < timeout) { 
 
      	readPacket();
 
@@ -957,7 +948,7 @@ void XBee::readPacket() {
     }
 }
 
-// it's peanut butter jelly time!!
+// it's peanut butter jelly time!!      <<--- LOL...
 
 XBeeRequest::XBeeRequest(uint8_t apiId, uint8_t frameId) {
 	_apiId = apiId;
@@ -1462,14 +1453,14 @@ void XBee::send(XBeeRequest &request) {
 	flush();
 }
 
-void XBee::sendByte(uint8_t b, bool escape) {
+void XBee::sendByte(uint8_t _b, bool escape) { 
 
-	if (escape && (b == START_BYTE || b == ESCAPE || b == XON || b == XOFF)) {
+	if (escape && (_b == START_BYTE || _b == ESCAPE || _b == XON || _b == XOFF)) {
 //		std::cout << "escaping byte [" << toHexString(b) << "] " << std::endl;
 		write(ESCAPE);
-		write(b ^ 0x20);
+		write(_b ^ 0x20);
 	} else {
-		write(b);
+		write(_b);
 	}
 }
 
